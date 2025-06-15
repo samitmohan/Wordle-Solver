@@ -1,4 +1,12 @@
-[Link]()
+[Link](https://wordle-solverr.streamlit.app/)
+
+To run:
+```python
+pip3 install -r requirements.txt
+streamlit run app.py
+```
+
+---
 
 Thoughts:
 
