@@ -217,6 +217,10 @@ def main():
             font-size: 3rem !important;
           }
         }
+        /* Force uppercase for single-letter inputs */
+        input[type="text"] {
+            text-transform: uppercase !important;
+        }
         </style>
         """,
         unsafe_allow_html=True
