@@ -194,17 +194,27 @@ def main():
           transform: scale(0.95) !important;
         }
 
-        /* Responsive layout: wrap columns into two per row on small screens */
-        @media (max-width: 600px) {
-          /* Horizontal block container */
-          [data-testid="stHorizontalBlock"] > div {
-            flex: 0 0 50% !important;
-            max-width: 50% !important;
+        /* Grid container for rows */
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(5, 3em);
+          grid-gap: 0.5em;
+          justify-content: center;
+          margin-bottom: 0.5rem;
+        }
+        .grid-cell {
+          width: 3em; height: 3em;
+          line-height: 3em; text-align: center;
+          font-weight: bold;
+          border-radius: 4px;
+        }
+        /* Mobile font scaling */
+        @media (max-width: 480px) {
+          .predictions {
+            font-size: 1.5rem !important;
           }
-          [data-testid="stHorizontalBlock"] {
-            display: flex !important;
-            flex-wrap: wrap !important;
-            justify-content: center !important;
+          .custom-title {
+            font-size: 3rem !important;
           }
         }
         </style>
@@ -212,7 +222,6 @@ def main():
         unsafe_allow_html=True
     )
     st.markdown('<div class="custom-title">Wordle Solver</div>', unsafe_allow_html=True)
-
 
     # display predicted word 
     if st.session_state.predicted_word:
@@ -228,26 +237,28 @@ def main():
         )
 
     for row in range(5):
-        cols = st.columns(5)
         if row < st.session_state.active_row:
+            # Static completed row as HTML grid
+            row_html = "<div class='grid-container'>"
             for col in range(5):
-                with cols[col]:
-                    letter = st.session_state.inputs[row][col].upper()
-                    color = st.session_state.color_states[row][col]
-                    # map to Wordle colors
-                    color_map = {
-                        "default": "#d3d6da",
-                        "gray": "#787c7e",
-                        "yellow": "#c9b458",
-                        "green": "#6aaa64"
-                    }
-                    st.markdown(
-                        f"<div style='width:3em;height:3em;line-height:3em;text-align:center;"
-                        f"background:{color_map[color]};color:black;font-weight:bold;margin:0.2em auto;'>{letter}</div>",
-                        unsafe_allow_html=True
-                    )
+                letter = st.session_state.inputs[row][col].upper()
+                color = st.session_state.color_states[row][col]
+                color_map = {
+                    "default": "#d3a3a3c",
+                    "gray": "#787c7e",
+                    "yellow": "#c9b458",
+                    "green": "#6aaa64"
+                }
+                row_html += (
+                    f"<div class='grid-cell' "
+                    f"style='background:{color_map[color]};color:#ffffff;'>"
+                    f"{letter}</div>"
+                )
+            row_html += "</div>"
+            st.markdown(row_html, unsafe_allow_html=True)
         # active row: clickable cells
         elif row == st.session_state.active_row:
+            cols = st.columns(5)
             for col in range(5):
                 with cols[col]:
                     # letter input
